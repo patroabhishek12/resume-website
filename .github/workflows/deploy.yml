@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write  # Changed from 'read' to allow pushing
   pages: write
   id-token: write
 
@@ -15,24 +15,98 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug - Start Workflow
+        run: |
+          echo "🚀 Starting deployment workflow..."
+          echo "Event: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true  # Keeps auth for git push
+          fetch-depth: 0  # Fetch all history for proper git operations
+
+      - name: Debug - Repository Info
+        run: |
+          echo "📁 Repository checked out"
+          echo "Working directory: $(pwd)"
+          echo "Git remote:"
+          git remote -v
+          echo "Git branches:"
+          git branch -a
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
+
+      - name: Debug - Node.js Info
+        run: |
+          echo "📦 Node.js version:"
+          node --version
+          echo "npm version:"
+          npm --version
 
       - name: Install dependencies
         run: |
+          echo "📦 Installing dependencies..."
           if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
+            npm ci --verbose
           else
-            npm install
+            npm install --verbose
           fi
 
+      - name: Debug - Dependencies Installed
+        run: |
+          echo "✅ Dependencies installed"
+          echo "Package.json exists: $(test -f package.json && echo 'YES' || echo 'NO')"
+          echo "Package-lock exists: $(test -f package-lock.json && echo 'YES' || echo 'NO')"
+
       - name: Build (only if you have a build step)
-        run: npm run build --if-present
+        run: |
+          echo "🔨 Building project..."
+          if [ -f package.json ] && grep -q '"build"' package.json; then
+            npm run build --if-present
+          else
+            echo "⚠️ No build script found in package.json"
+          fi
+
+      - name: Debug - Build Output
+        run: |
+          echo "📂 Current directory structure:"
+          ls -la
+          echo ""
+          echo "📂 Checking for public/ directory:"
+          if [ -d "./public" ]; then
+            echo "✅ Public directory exists"
+            echo "Contents of public/:"
+            ls -la public/
+            echo ""
+            echo "📄 Checking for index.html:"
+            if [ -f "./public/index.html" ]; then
+              echo "✅ index.html exists in public/"
+            else
+              echo "❌ index.html NOT found in public/"
+              echo "Looking for HTML files in public/:"
+              find ./public -name "*.html" -type f
+            fi
+          else
+            echo "❌ Public directory NOT found!"
+            echo "Looking for other potential build directories:"
+            ls -d */ 2>/dev/null || echo "No directories found"
+          fi
+
+      - name: Verify GitHub Token
+        run: |
+          echo "🔑 Checking GitHub token permissions..."
+          echo "Token exists: ${{ secrets.GITHUB_TOKEN != '' && 'YES' || 'NO' }}"
+          # Test token permissions (read-only check)
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }} | \
+            jq -r '"Repo: " + .full_name + ", Permissions: " + (.permissions.admin|tostring) + "/" + (.permissions.push|tostring) + "/" + (.permissions.pull|tostring)'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -40,3 +114,23 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: gh-pages
+          force_orphan: false  # Keep history (set to true for clean branch)
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Optional: uncomment if you want to deploy only from a specific directory
+          # keep_files: false  # Remove existing files before deploy
+
+      - name: Debug - Post Deployment
+        run: |
+          echo "📊 Checking deployment status..."
+          echo "Current time: $(date)"
+          echo ""
+          echo "🔍 Checking if gh-pages branch exists locally:"
+          git fetch origin gh-pages 2>/dev/null && echo "✅ gh-pages branch exists on remote" || echo "❌ gh-pages branch not found"
+          
+          echo ""
+          echo "📝 Final git status:"
+          git status --short
+          
+          echo ""
+          echo "✅ Deployment completed (check GitHub Pages settings for URL)"
