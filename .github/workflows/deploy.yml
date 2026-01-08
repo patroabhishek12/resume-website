@@ -8,10 +8,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -20,6 +27,15 @@ jobs:
       
       - name: Install dependencies
         run: npm install
+
+      - name: Debug: repo and public folder
+        run: |
+          echo "--- git remote -v ---"
+          git remote -v || true
+          echo "--- git branch -a ---"
+          git branch -a || true
+          echo "--- ls public (should contain index.html) ---"
+          ls -la public || true
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
