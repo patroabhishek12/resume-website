@@ -39,6 +39,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Debug build output
+        run: |
+          echo "PWD:"
+          pwd
+          echo "Files:"
+          ls -la
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
