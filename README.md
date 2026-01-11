@@ -1,14 +1,17 @@
-# Abhishek Patro - Resume Website
+# Resume Template
 
-A professional, responsive resume website built with Node.js, HTML, CSS, and JavaScript. Designed to be hosted on GitHub Pages.
+A professional, customizable resume website template with JSON-driven content and CLI scaffolding. Built with Node.js, HTML, CSS, and JavaScript. Perfect for hosting on GitHub Pages.
 
 ## 🚀 Features
 
+- **JSON-Driven Configuration** - Define your resume once in `resume-data.json`, auto-generates beautiful HTML
+- **CLI Scaffolding Tool** - Create new resume projects with `create-resume` command
 - **Fully Responsive Design** - Works perfectly on desktop, tablet, and mobile devices
 - **Modern UI/UX** - Clean, professional design with smooth animations
 - **Single Page Application** - Smooth scrolling navigation between sections
 - **Interactive Elements** - Hover effects, scroll animations, and mobile menu
-- **Sections Include:**
+- **Customizable Themes** - Easy color customization via JSON config
+- **Flexible Sections:**
   - Hero/Introduction
   - Professional Summary with Certifications
   - Awards & Accomplishments
@@ -23,7 +26,21 @@ A professional, responsive resume website built with Node.js, HTML, CSS, and Jav
 - npm (comes with Node.js)
 - Git (for deployment to GitHub)
 
-## 🛠️ Installation
+## 🚀 Quick Start
+
+### Option 1: Using the CLI Generator (Recommended)
+
+Create a new resume project:
+```bash
+npx resume-template create
+```
+
+Follow the interactive prompts to set up your project. The CLI will:
+1. Create a new project directory
+2. Generate template files with your information
+3. Set up all necessary configurations
+
+### Option 2: Manual Setup
 
 1. **Clone or navigate to the project directory:**
    ```bash
@@ -35,26 +52,40 @@ A professional, responsive resume website built with Node.js, HTML, CSS, and Jav
    npm install
    ```
 
+3. **Edit your resume data:**
+   - Update `resume-data.json` with your personal information, experience, skills, etc.
+
+4. **Build HTML from JSON:**
+   ```bash
+   npm run build
+   ```
+
 ## 🎯 Usage
 
 ### Local Development
 
-Run the development server:
-```bash
-npm start
-```
-
-Then open your browser and navigate to:
-```
-http://localhost:3000
-```
+1. Update `resume-data.json` with your information
+2. Build the resume:
+   ```bash
+   npm run build
+   ```
+3. Run the development server:
+   ```bash
+   npm start
+   ```
+4. Open your browser to:
+   ```
+   http://localhost:3000
+   ```
 
 ### Development with Auto-Reload
 
-For development with auto-reload (requires nodemon):
+For development with auto-reload (watches `resume-data.json` for changes):
 ```bash
-npm run dev
+npm run build:watch
 ```
+
+This will rebuild your HTML whenever you save changes to `resume-data.json`.
 
 ## 📦 Deployment to GitHub Pages
 
@@ -106,31 +137,111 @@ Your site will be available at:
 ## 📁 Project Structure
 
 ```
-resume-website/
+resume-template/
 ├── public/
-│   ├── index.html      # Main HTML file with resume content
-│   ├── styles.css      # Complete styling
+│   ├── index.html      # Generated HTML (auto-created from resume-data.json)
+│   ├── styles.css      # Complete styling (reusable across projects)
 │   └── script.js       # JavaScript for interactivity
-├── server.js           # Express server for local development
-├── package.json        # Project dependencies
-└── README.md          # This file
+├── bin/
+│   └── create-resume.js    # CLI tool for scaffolding new projects
+├── build-resume.js         # Build script (JSON → HTML)
+├── resume-data.json        # Your resume data (single source of truth)
+├── server.js               # Express server for local development
+├── package.json            # Project dependencies
+└── README.md               # This file
+```
+
+## 📝 JSON Resume Data Schema
+
+The `resume-data.json` file is the single source of truth for your resume. Edit this file to update your resume content:
+
+```json
+{
+  "name": "Your Name",
+  "title": "Your Job Title",
+  "subtitle": "Your Specializations",
+  "description": "Brief intro",
+  "email": "you@example.com",
+  "social": {
+    "linkedin": "https://linkedin.com/in/yourprofile",
+    "github": "https://github.com/yourprofile",
+    "portfolio": "https://yourportfolio.com"
+  },
+  "summary": {
+    "heading": "Professional Summary",
+    "content": "Your professional summary...",
+    "highlights": [
+      {
+        "icon": "briefcase",
+        "title": "Specialization",
+        "description": "Details about your specialization"
+      }
+    ],
+    "certifications": ["Cert 1", "Cert 2"]
+  },
+  "experience": [
+    {
+      "title": "Job Title",
+      "company": "Company Name",
+      "location": "City, Country",
+      "duration": "Month Year - Present",
+      "highlights": ["Achievement 1", "Achievement 2"],
+      "technologies": ["Tech1", "Tech2"]
+    }
+  ],
+  "skills": [
+    {
+      "category": "Languages",
+      "items": ["Java", "Python", "Go"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Engineering",
+      "field": "Computer Science",
+      "institution": "University Name",
+      "year": "2020"
+    }
+  ],
+  "accomplishments": [
+    {
+      "title": "Award Name",
+      "position": "Award Position",
+      "description": "Award description",
+      "icon": "🏆"
+    }
+  ],
+  "theme": {
+    "primaryColor": "#2563eb",
+    "secondaryColor": "#1e40af",
+    "accentColor": "#3b82f6"
+  }
+}
 ```
 
 ## 🎨 Customization
 
-### Update Personal Information
+### Update Resume Content
 
-Edit `public/index.html` and update:
-- Name and title in the hero section
-- Contact information
-- Work experience details
-- Skills and technologies
-- Education details
-- Social media links
+Simply edit `resume-data.json`:
+- Update personal information (name, email, social links)
+- Add/modify work experience
+- Update skills and certifications
+- Add education and accomplishments
+- All changes are reflected in the HTML after running `npm run build`
 
 ### Change Colors/Theme
 
-Edit `public/styles.css` and modify the CSS variables in the `:root` section:
+Modify the `theme` object in `resume-data.json`:
+```json
+"theme": {
+  "primaryColor": "#2563eb",
+  "secondaryColor": "#1e40af",
+  "accentColor": "#3b82f6"
+}
+```
+
+Or override CSS variables in `public/styles.css`:
 ```css
 :root {
     --primary-color: #2563eb;
@@ -139,9 +250,9 @@ Edit `public/styles.css` and modify the CSS variables in the `:root` section:
 }
 ```
 
-### Modify Sections
+### Advanced Styling
 
-You can add, remove, or reorder sections in `public/index.html`. Make sure to update the navigation menu accordingly.
+For additional styling customization, edit `public/styles.css`. The template uses CSS custom properties (variables) for easy theming.
 
 ## 🌐 Browser Support
 
@@ -159,27 +270,36 @@ You can add, remove, or reorder sections in `public/index.html`. Make sure to up
 - **Deployment:** GitHub Pages
 - **Package Manager:** npm
 
+## 📚 Examples
+
+See `resume-data.json` in this repository for a complete example with all sections filled in.
+
 ## 🤝 Contributing
 
-This is a personal resume website. Feel free to fork and customize for your own use!
+This template is open-source! Feel free to:
+- Fork and customize for your own use
+- Submit issues and feature requests
+- Create pull requests with improvements
 
 ## 📄 License
 
 MIT License - feel free to use this template for your own resume website.
 
-## 👨‍💻 Author
+## 👨‍💻 Template Creator
 
 **Abhishek Patro**
 - Email: patroabhishek12@gmail.com
-- LinkedIn: [linkedin.com/in/abhishek-patro-b85713153](https://www.linkedin.com/in/abhishek-patro-b85713153)
+- LinkedIn: [linkedin.com/in/abhishek-patro-8a3b401a4](https://www.linkedin.com/in/abhishek-patro-8a3b401a4)
 - Portfolio: [bold.pro/my/ab-11121991](https://bold.pro/my/ab-11121991)
+- GitHub: [github.com/springbootMicroservices2](https://github.com/springbootMicroservices2)
 
 ## 🙏 Acknowledgments
 
 - Font Awesome for icons
 - Google Fonts for typography inspiration
 - GitHub Pages for free hosting
+- All the users who help improve this template
 
 ---
 
-**Built with ❤️ using Node.js**
+**Built with ❤️ using Node.js & JavaScript**

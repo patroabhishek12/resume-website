@@ -1,0 +1,78 @@
+{
+  "name": "Your Name",
+  "title": "Your Professional Title",
+  "subtitle": "Your Specializations",
+  "description": "Brief professional description",
+  "email": "your.email@example.com",
+  "social": {
+    "linkedin": "https://linkedin.com/in/yourprofile",
+    "github": "https://github.com/yourprofile",
+    "portfolio": "https://yourportfolio.com",
+    "phone": "+1234567890"
+  },
+  "summary": {
+    "heading": "Professional Summary",
+    "content": "Your professional summary here...",
+    "highlights": [
+      {
+        "icon": "briefcase",
+        "title": "Specialization",
+        "description": "Description of your specialization"
+      },
+      {
+        "icon": "server",
+        "title": "Expertise Area",
+        "description": "Description of your expertise"
+      }
+    ],
+    "certifications": [
+      "Certification 1",
+      "Certification 2"
+    ]
+  },
+  "experience": [
+    {
+      "title": "Senior Software Engineer",
+      "company": "Company Name",
+      "location": "City, Country",
+      "duration": "Month Year - Present",
+      "highlights": [
+        "Achievement or responsibility 1",
+        "Achievement or responsibility 2"
+      ],
+      "technologies": ["Tech1", "Tech2", "Tech3"]
+    }
+  ],
+  "skills": [
+    {
+      "category": "Languages",
+      "items": ["Java", "Python", "Go"]
+    },
+    {
+      "category": "Frameworks",
+      "items": ["Spring Boot", "React", "FastAPI"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Engineering",
+      "field": "Computer Science",
+      "institution": "University Name",
+      "year": "2014",
+      "details": "Additional details about your education"
+    }
+  ],
+  "accomplishments": [
+    {
+      "title": "Award Name",
+      "position": "Award Position/Rank",
+      "description": "Award description",
+      "icon": "🏆"
+    }
+  ],
+  "theme": {
+    "primaryColor": "#2563eb",
+    "secondaryColor": "#1e40af",
+    "accentColor": "#3b82f6"
+  }
+}
